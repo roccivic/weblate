@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 
+from haystack.query import SearchQuerySet
+
 from trans.models import Project, SubProject, Translation, Unit, Suggestion, Check
 from lang.models import Language
 from trans.forms import TranslationForm, UploadForm, SimpleUploadForm, SearchForm
@@ -377,6 +379,12 @@ def get_string(request, checksum):
         return HttpResponse('')
 
     return HttpResponse(units[0].get_source_plurals()[0])
+
+def get_similar(request, unit_id):
+    unit = get_object_or_404(Unit, pk = int(unit_id))
+    return render_to_response('similar.html', RequestContext(request, {
+        'similar': SearchQuerySet().filter(project =  unit.translation.subproject.project.id, language = unit.translation.language.id).more_like_this(unit),
+    }))
 
 @login_required
 @permission_required('trans.ignore_check')

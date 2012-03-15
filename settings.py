@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'registration',
+    'haystack',
     'trans',
     'lang',
     'accounts',
@@ -213,6 +214,11 @@ LOGGING = {
         }
     }
 }
+
+# Haystack setup
+HAYSTACK_SITECONF = 'weblate.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
 
 # Machine translation API keys
 
